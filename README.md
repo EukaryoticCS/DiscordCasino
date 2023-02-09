@@ -10,9 +10,9 @@ Hello! I'm Project Greed, a Discord Bot made to model casino games like poker, b
 
 <b>----- GAME COMMANDS -----</b>
 
-`/blackjack`: TBD
-`/poker`: TBD
-`/slots`: TBD
+`/blackjack`: TBD  
+`/poker`: TBD  
+`/slots`: TBD  
 
 <b>----- EXAMPLES -----</b>  
 
