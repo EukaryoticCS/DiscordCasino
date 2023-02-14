@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-mongoose.connect("mongodb+srv://ProjectGreed:fRL5HIRrZFRbRyK7@projectgreed.kobcu4l.mongodb.net/ProjectGreed?retryWrites=true&w=majority");
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URI);
 
 const userSchema = new mongoose.Schema({
     discordID: String,
