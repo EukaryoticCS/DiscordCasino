@@ -74,4 +74,3 @@ client.once(Events.ClientReady, c=>{
 //This checks if a chat input has an interaction with the bot and checks the command list
 
 client.login(process.env.TOKEN);
-//client.login('MTA3MzI4MzcyODI0MTA3MDA4MA.Gzv60c.4rKOLXbvy1cvJ7HRwi67YlYt6IGEqU_MphChOA');
