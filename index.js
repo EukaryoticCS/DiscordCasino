@@ -1,10 +1,9 @@
-var mongodb = require('./mongodb.js')
+require('dotenv').config();
+/////////////////////////////////////////////////
 const fs = require('node:fs');
 const path = require('node:path');
-//Requiring necessities from discord.js
+//var mongodb = require('./mongodb.js')
 const {Client,Events,GatewayIntentBits, Collection} = require("discord.js");
-//Requires dotenv then configures our .env file
-require('dotenv').config();
 //Creating a new instance of our client
 const client = new Client({intents:[GatewayIntentBits.Guilds]})
 
@@ -21,14 +20,35 @@ for(const file of commandFiles){
     const filePath = path.join(commandPath, file);
     const command = require(filePath);
     //Basically creates an array of our commands
-    client.command.set(command.data.name, command);
+    if('data' in command && 'exectue' in command){
+        client.command.set(command.data.name, command);
+    }
+    else{
+        console.log(`[WARNING] something is wrong in the commands at ${filePath}`);
+    }  
 }
+
+client.on(Events.InteractionCreate, async interaction =>{
+    if(!interaction.isChatInputCommand()) return;
+    const command = interaction.client.commands.get(interaction.commandName);
+    if(!command) {
+        console.error(`No command matching ${interaction.commandName} was found`);
+        return;}
+    try{
+        await command.execute(interaction)
+    }catch(err){
+        console.error(err);
+        await interaction.reply({content: 'AHH SOMETHING BROKE', ephemeral: true});
+    }
+});
 
 //useses the new instance of the bot to wake it up
 client.once(Events.ClientReady, c=>{
     console.log('GOOOOOD MORNIN VEGAS');
     
 });
+
+
 
 
 // async function testMethodToGetAvailableFunds() {
@@ -52,24 +72,6 @@ client.once(Events.ClientReady, c=>{
 // testMethodToGetAvailableFunds();
 
 //This checks if a chat input has an interaction with the bot and checks the command list
-client.on(Events.InteractionCreate, async interaction =>{
-    if(!interaction.isChatInputCommand()) return;
-    const command = client.commands.get(interaction.commandName);
-    if(!command) return;
-});
-
-//This checks if a chat input has an interaction with the bot and checks the command list
-client.on(Events.InteractionCreate, async interaction =>{
-    if(!interaction.isChatInputCommand()) return;
-    const command = client.commands.get(interaction.commandName);
-    if(!command) return;
-
-    try{
-        await command.execute(interaction)
-    }catch(err){
-        console.error(err);
-        await interaction.reply({content: 'AHH SOMETHING BROKE', ephemeral: true});
-    }
-});
 
 client.login(process.env.TOKEN);
+//client.login('MTA3MzI4MzcyODI0MTA3MDA4MA.Gzv60c.4rKOLXbvy1cvJ7HRwi67YlYt6IGEqU_MphChOA');
