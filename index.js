@@ -3,9 +3,9 @@ require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
 //var mongodb = require('./mongodb.js')
-const {Client,Events,GatewayIntentBits, Collection} = require("discord.js");
+const {Client,Events,GatewayIntentBits, Collection,CommandInteraction} = require("discord.js");
 //Creating a new instance of our client
-const client = new Client({intents:[GatewayIntentBits.Guilds]})
+const client = new Client({intents:[GatewayIntentBits.Guilds,GatewayIntentBits.MessageContent,GatewayIntentBits.GuildIntegrations,]})
 
 //Creates a new instance for a collection
 client.commands = new Collection();
