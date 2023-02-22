@@ -5,6 +5,7 @@ const path = require('node:path');
 const pingCommand = require("./commands/pingCommand")
 const embeded = require("./Embeded")
 const { Client, GatewayIntentBits, Collection, Events,IntentsBitField, } = require("discord.js");
+const deckofcards = require('./services/deckofcards.js');
 dotenv.config();
 const client = new Client({intents:[IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.GuildMessageReactions]})
 
@@ -14,13 +15,20 @@ client.once(Events.ClientReady, async c =>{
     const channel = await client.channels.fetch('1006328808917438546')
     console.log(channel);
     console.log('GOOOOOD MORNIN VEGAS');
+
      channel.send({ embeds: [embeded] });
+     
+    deckofcards.startBlackJack();
 });
 
 
 client.once(Event.Client,c => {
+
     console.log('I ran hoe');
     embeded.exampleEmbed();
+
+    // pingCommand.execute();
+
 });
 
 
