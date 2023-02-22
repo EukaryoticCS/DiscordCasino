@@ -3,28 +3,28 @@ require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
 //var mongodb = require('./mongodb.js')
-const {Client,Events,GatewayIntentBits, Collection,CommandInteraction} = require("discord.js");
+const {Client,Events,GatewayIntentBits, Collection} = require("discord.js");
 //Creating a new instance of our client
-const client = new Client({intents:[GatewayIntentBits.Guilds,GatewayIntentBits.MessageContent,GatewayIntentBits.GuildIntegrations,]})
+const client = new Client({intents:[GatewayIntentBits.Guilds]})
 
 //Creates a new instance for a collection
 client.commands = new Collection();
 //goes into the commands folder to find commands
-const commandPath = path.join(__dirname, 'commands');
+const commandsPath = path.join(__dirname, 'commands');
 //Filters classes in the command folder. Looks to see if it ends with .js or not
-const commandFiles = fs.readdirSync(commandPath).filter(file=>file.endsWith('.js'));
+const commandFiles = fs.readdirSync(commandsPath).filter(file=>file.endsWith('.js'));
 
 
-//Loops through all the files in the command file
+//Loops through all the files in the command folder
 for(const file of commandFiles){
-    const filePath = path.join(commandPath, file);
+    const filePath = path.join(commandsPath, file);
     const command = require(filePath);
     //Basically creates an array of our commands
-    if('data' in command && 'exectue' in command){
-        client.command.set(command.data.name, command);
+    if('data' in command && 'execute' in command){
+        client.commands.set(command.data.name, command);
     }
     else{
-        console.log(`[WARNING] something is wrong in the commands at ${filePath}`);
+        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "exexcute" property`);
     }  
 }
 
