@@ -49,8 +49,6 @@ client.once(Events.ClientReady, c=>{
 });
 
 
-
-
 // async function testMethodToGetAvailableFunds() {
 //     try { //Get available funds
 //         const user = await mongodb.getUser('447233441423949844');
@@ -71,6 +69,6 @@ client.once(Events.ClientReady, c=>{
 
 // testMethodToGetAvailableFunds();
 
-//This checks if a chat input has an interaction with the bot and checks the command list
+
 
 client.login(process.env.TOKEN);
