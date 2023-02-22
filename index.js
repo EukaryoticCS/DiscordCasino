@@ -1,26 +1,58 @@
-//var mongodb = require('./mongodb.js')
-const dotenv = require('dotenv');
+require('dotenv').config();
+/////////////////////////////////////////////////
 const fs = require('node:fs');
 const path = require('node:path');
-const pingCommand = require("./commands/pingCommand")
-const embeded = require("./Embeded")
-const { Client, GatewayIntentBits, Collection, Events,IntentsBitField, } = require("discord.js");
+//var mongodb = require('./mongodb.js')
+const {Client,Events,GatewayIntentBits, Collection} = require("discord.js");
 const deckofcards = require('./services/deckofcards.js');
-dotenv.config();
-const client = new Client({intents:[IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.GuildMessageReactions]})
+//Creating a new instance of our client
+const client = new Client({intents:[GatewayIntentBits.Guilds]})
+//Creates a new instance for a collection
+client.commands = new Collection();
+//goes into the commands folder to find commands
+const commandsPath = path.join(__dirname, 'commands');
+const embeded = require("./Embeded")
+//Filters classes in the command folder. Looks to see if it ends with .js or not
+const commandFiles = fs.readdirSync(commandsPath).filter(file=>file.endsWith('.js'));
 
 
+//Loops through all the files in the command folder
+for(const file of commandFiles){
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    //Basically creates an array of our commands
+    if('data' in command && 'execute' in command){
+        client.commands.set(command.data.name, command);
+    }
+    else{
+        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "exexcute" property`);
+    }  
+}
 
+client.on(Events.InteractionCreate, async interaction =>{
+    if(!interaction.isChatInputCommand()) return;
+    const command = interaction.client.commands.get(interaction.commandName);
+    if(!command) {
+        console.error(`No command matching ${interaction.commandName} was found`);
+        return;}
+    try{
+        await command.execute(interaction)
+    }catch(err){
+        console.error(err);
+        await interaction.reply({content: 'AHH SOMETHING BROKE', ephemeral: true});
+    }
+});
+
+//useses the new instance of the bot to wake it up
 client.once(Events.ClientReady, async c =>{
     const channel = await client.channels.fetch('1006328808917438546')
-    console.log(channel);
+    //console.log(channel);
     console.log('GOOOOOD MORNIN VEGAS');
 
-     channel.send({ embeds: [embeded] });
+    //channel.send({ embeds: [embeded] });
      
     deckofcards.startBlackJack();
 });
-
 
 client.once(Event.Client,c => {
 
@@ -28,7 +60,6 @@ client.once(Event.Client,c => {
     embeded.exampleEmbed();
 
     // pingCommand.execute();
-
 });
 
 
@@ -55,4 +86,3 @@ client.once(Event.Client,c => {
 
 
 client.login(process.env.TOKEN);
-
