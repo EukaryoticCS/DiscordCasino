@@ -38,8 +38,8 @@ async function drawCard(player, deck_id, count) {
 
 async function startBlackJack() {
     deck_id = await makeNewDeck();
-    await drawCard('Player', deck_id, 3);
-    await drawCard('Dealer', deck_id, 3);
+    await drawCard('Player', deck_id, 2);
+    await drawCard('Dealer', deck_id, 2);
     // console.log(await getPlayerCards('Player', deck_id));
     // console.log(await getPlayerCards('Dealer', deck_id));
 
@@ -98,7 +98,7 @@ function getHandValue(cards) {
 module.exports = {
     makeNewDeck,
     drawCard,
-    startGame: startBlackJack,
+    startBlackJack,
     getPlayerCards,
     getHandValue
 }
