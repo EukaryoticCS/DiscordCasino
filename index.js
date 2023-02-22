@@ -4,13 +4,14 @@ const fs = require('node:fs');
 const path = require('node:path');
 //var mongodb = require('./mongodb.js')
 const {Client,Events,GatewayIntentBits, Collection} = require("discord.js");
+const deckofcards = require('./services/deckofcards.js');
 //Creating a new instance of our client
 const client = new Client({intents:[GatewayIntentBits.Guilds]})
-
 //Creates a new instance for a collection
 client.commands = new Collection();
 //goes into the commands folder to find commands
 const commandsPath = path.join(__dirname, 'commands');
+const embeded = require("./Embeded")
 //Filters classes in the command folder. Looks to see if it ends with .js or not
 const commandFiles = fs.readdirSync(commandsPath).filter(file=>file.endsWith('.js'));
 
@@ -43,9 +44,22 @@ client.on(Events.InteractionCreate, async interaction =>{
 });
 
 //useses the new instance of the bot to wake it up
-client.once(Events.ClientReady, c=>{
+client.once(Events.ClientReady, async c =>{
+    const channel = await client.channels.fetch('1006328808917438546')
+    //console.log(channel);
     console.log('GOOOOOD MORNIN VEGAS');
-    
+
+    //channel.send({ embeds: [embeded] });
+     
+    deckofcards.startBlackJack();
+});
+
+client.once(Event.Client,c => {
+
+    console.log('I ran hoe');
+    embeded.exampleEmbed();
+
+    // pingCommand.execute();
 });
 
 
