@@ -3,7 +3,7 @@ require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
 //var mongodb = require('./mongodb.js')
-const {Client,Events,GatewayIntentBits, Collection} = require("discord.js");
+const {Client,Events,GatewayIntentBits, Collection, ButtonInteraction} = require("discord.js");
 const deckofcards = require('./services/deckofcards.js');
 //Creating a new instance of our client
 const client = new Client({intents:[GatewayIntentBits.Guilds]})
@@ -61,6 +61,22 @@ client.once(Event.Client,c => {
 
     // pingCommand.execute();
 });
+
+client.on('interactionCreate', interaction =>{
+
+    if(!interaction.isButton()) return;
+    if(interaction.customId == 'btnHit'){
+        interaction.reply('You hit hit! :smile:')
+    }
+    if(interaction.customId == 'btnBet'){
+        interaction.reply('You bet! :moneybag:')
+    }
+    if(interaction.customId == 'btnStand'){
+        interaction.reply('Fuckin nerd. Bet more next time :x:')
+    }
+    
+
+})
 
 
 // async function testMethodToGetAvailableFunds() {
