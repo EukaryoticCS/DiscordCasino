@@ -2,7 +2,7 @@ require('dotenv').config();
 /////////////////////////////////////////////////
 const fs = require('node:fs');
 const path = require('node:path');
-//var mongodb = require('./mongodb.js')
+var mongodb = require('./mongodb.js')
 const {Client,Events,GatewayIntentBits, Collection, ButtonInteraction} = require("discord.js");
 const deckofcards = require('./services/deckofcards.js');
 //Creating a new instance of our client
@@ -14,6 +14,8 @@ const commandsPath = path.join(__dirname, 'commands');
 const embeded = require("./Embeded")
 //Filters classes in the command folder. Looks to see if it ends with .js or not
 const commandFiles = fs.readdirSync(commandsPath).filter(file=>file.endsWith('.js'));
+
+let deck_id = null;
 
 
 //Loops through all the files in the command folder
@@ -30,16 +32,48 @@ for(const file of commandFiles){
 }
 
 client.on(Events.InteractionCreate, async interaction =>{
-    if(!interaction.isChatInputCommand()) return;
-    const command = interaction.client.commands.get(interaction.commandName);
-    if(!command) {
-        console.error(`No command matching ${interaction.commandName} was found`);
-        return;}
-    try{
-        await command.execute(interaction)
-    }catch(err){
-        console.error(err);
-        await interaction.reply({content: 'AHH SOMETHING BROKE', ephemeral: true});
+    if(interaction.isButton()) {
+        if(interaction.customId == 'btnHit'){
+            interaction.reply('You hit hit! :smile:')
+        }
+        if(interaction.customId == 'btnBet'){
+            interaction.reply('You bet! :moneybag:')
+        }
+        if(interaction.customId == 'btnStand'){
+            // await interaction.deferReply();
+                bet = 30;
+                console.log(deckofcards.checkBlackJackWin(bet, interaction));
+                // interaction.reply('Fuckin nerd. Bet more next time :x:');
+            // try {
+                
+            // } catch {
+            //     console.log("oopsie");
+            // }
+        }
+    }
+
+    if(interaction.isChatInputCommand()) {
+        const command = interaction.client.commands.get(interaction.commandName);
+        // await interaction.deferReply();
+        // let user = await mongodb.getUser(interaction.member.user.id);
+        // if (!user) {
+        //     user = await mongodb.createUser(interaction.member.user.id);
+        // } else {
+        //     console.log(user);
+        // }
+
+        if(!command) {
+            console.error(`No command matching ${interaction.commandName} was found`);
+            return;}
+        try{
+            if (interaction.commandName == 'blackjack') {
+                console.log('running blackjack!');
+            }
+            await command.execute(interaction);
+        }catch(err){
+            console.error(err);
+            await interaction.reply({content: 'AHH SOMETHING BROKE', ephemeral: true});
+        }
     }
 });
 
@@ -50,34 +84,9 @@ client.once(Events.ClientReady, async c =>{
     console.log('GOOOOOD MORNIN VEGAS');
 
     //channel.send({ embeds: [embeded] });
-     
-    deckofcards.startBlackJack();
+
+    // deckofcards.startBlackJack();
 });
-
-client.once(Event.Client,c => {
-
-    console.log('I ran hoe');
-    embeded.exampleEmbed();
-
-    // pingCommand.execute();
-});
-
-client.on('interactionCreate', interaction =>{
-
-    if(!interaction.isButton()) return;
-    if(interaction.customId == 'btnHit'){
-        interaction.reply('You hit hit! :smile:')
-    }
-    if(interaction.customId == 'btnBet'){
-        interaction.reply('You bet! :moneybag:')
-    }
-    if(interaction.customId == 'btnStand'){
-        interaction.reply('Fuckin nerd. Bet more next time :x:')
-    }
-    
-
-})
-
 
 // async function testMethodToGetAvailableFunds() {
 //     try { //Get available funds
@@ -98,7 +107,5 @@ client.on('interactionCreate', interaction =>{
 // }
 
 // testMethodToGetAvailableFunds();
-
-
 
 client.login(process.env.TOKEN);
