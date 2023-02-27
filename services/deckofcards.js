@@ -13,7 +13,7 @@ async function makeNewDeck() {
     deck_id = await res.data.deck_id;
 }
 
-async function drawCards(playerHand, deck_id, count) {
+async function drawDealerCards(count) {
     // console.log(count);
     res = await axios({
         method: 'get',
@@ -21,7 +21,19 @@ async function drawCards(playerHand, deck_id, count) {
     });
     for (card in res.data.cards) {
         console.log(res.data.cards[card]);
-        playerHand.cards.push(res.data.cards[card]);
+        dealerCards.cards.push(res.data.cards[card]);
+    }
+}
+
+async function drawPlayerCards(count) {
+    // console.log(count);
+    res = await axios({
+        method: 'get',
+        url: apiPath + '/api/deck/' + deck_id + '/draw/?count=' + count
+    });
+    for (card in res.data.cards) {
+        console.log(res.data.cards[card]);
+        playerCards.cards.push(res.data.cards[card]);
     }
 }
 
@@ -30,8 +42,8 @@ async function startBlackJack() {
     playerCards = {cards: []};
     dealerCards = {cards: []};
     await makeNewDeck();
-    await drawCards(playerCards, deck_id, 2);
-    await drawCards(dealerCards, deck_id, 2);
+    await drawDealerCards(2);
+    await drawPlayerCards(2);
 
     // console.log(playerCards);
 
@@ -81,6 +93,8 @@ function getHandValue(cards) {
 
 function checkBlackJackWin(bet, interaction) {
     playerScore = getHandValue(playerCards);
+    console.log("Player cards:");
+    console.log(playerCards);
     dealerScore = getHandValue(dealerCards);
 
     if (playerScore > 21)
@@ -91,32 +105,32 @@ function checkBlackJackWin(bet, interaction) {
 
     if (playerScore == 0 && dealerScore == 0) {
         console.log("Player and Dealer busted! Bets returned...");
-        interaction.reply("Player and Dealer busted! Bets returned...");
+        interaction.message.edit("Player and Dealer busted! Bets returned...");
         return bet;
     } else if (playerScore == 0) {
         console.log("Player busted! Bets given to Dealer...");
-        interaction.reply("Player busted! Bets given to Dealer...");
+        interaction.message.edit("Player busted! Bets given to Dealer...");
         return 0;
     } else if (playerScore == dealerScore) {
         console.log("Player and Dealer tied! Bets returned...");
-        interaction.reply("Player and Dealer tied! Bets returned...");
+        interaction.message.edit("Player and Dealer tied! Bets returned...");
         return bet;
     } else if (playerScore < dealerScore) {
         console.log("Dealer wins: " + dealerScore + " vs. " + playerScore);
-        interaction.reply("Dealer wins: " + dealerScore + " vs. " + playerScore);
+        interaction.message.edit("Dealer wins: " + dealerScore + " vs. " + playerScore);
         return 0;
     } else {
         console.log("Player wins: " + playerScore + " vs. " + dealerScore);
         if (playerCards.cards.length >= 5) {
             console.log("FIVE CARD CHARLIE WHATTTT");
-            interaction.reply("Player wins: " + playerScore + " (FIVE CARD CHARLIE WHATTTT)" + " vs. " + dealerScore);
+            interaction.message.edit("Player wins: " + playerScore + " (FIVE CARD CHARLIE WHATTTT)" + " vs. " + dealerScore);
             return bet * 4;
         } else if (playerCards.cards.length == 2 && playerScore == 21) {
             console.log("BLACKJACK!!!");
-            interaction.reply("Player wins: " + playerScore + " (BLACKJACK!!!)" + " vs. " + dealerScore);
+            interaction.message.edit("Player wins: " + playerScore + " (BLACKJACK!!!)" + " vs. " + dealerScore);
             return bet * 3;
         } else {
-            interaction.reply("Player wins: " + playerScore + " vs. " + dealerScore);
+            interaction.message.edit("Player wins: " + playerScore + " vs. " + dealerScore);
             return bet * 2;
         }
     }
@@ -129,7 +143,8 @@ module.exports = {
     playerCards,
     dealerCards,
     makeNewDeck,
-    drawCards,
+    drawDealerCards,
+    drawPlayerCards,
     startBlackJack,
     getHandValue,
     checkBlackJackWin

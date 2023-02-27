@@ -5,7 +5,7 @@ module.exports = {
 	data: new SlashCommandBuilder().setName('blackjack').setDescription('Our main play blackjack command'),
 	async execute(interaction){ 
 
-        interaction.deferReply();
+		// interaction.deferReply();
         await deckofcards.startBlackJack();
 		const btnBlackjack = new ActionRowBuilder()
 		.addComponents(
@@ -27,7 +27,6 @@ module.exports = {
 			.setStyle(ButtonStyle.Danger),
 		)
 		
-		interaction.editReply({content: 'this is blackjack!', components: [btnBlackjack]});
-        
+		interaction.followUp({content: 'this is blackjack!', components: [btnBlackjack]});
 	},
 };

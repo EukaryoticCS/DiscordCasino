@@ -34,10 +34,12 @@ for(const file of commandFiles){
 client.on(Events.InteractionCreate, async interaction =>{
     if(interaction.isButton()) {
         if(interaction.customId == 'btnHit'){
-            interaction.reply('You hit hit! :smile:')
+            // console.log(interaction.message);
+            deckofcards.drawPlayerCards(1);
+            interaction.message.edit('Card drawn!');
         }
         if(interaction.customId == 'btnBet'){
-            interaction.reply('You bet! :moneybag:')
+            interaction.message.edit('You bet! :moneybag:')
         }
         if(interaction.customId == 'btnStand'){
             // await interaction.deferReply();
@@ -54,13 +56,13 @@ client.on(Events.InteractionCreate, async interaction =>{
 
     if(interaction.isChatInputCommand()) {
         const command = interaction.client.commands.get(interaction.commandName);
-        // await interaction.deferReply();
-        // let user = await mongodb.getUser(interaction.member.user.id);
-        // if (!user) {
-        //     user = await mongodb.createUser(interaction.member.user.id);
-        // } else {
-        //     console.log(user);
-        // }
+        await interaction.deferReply();
+        let user = await mongodb.getUser(interaction.member.user.id);
+        if (!user) {
+            user = await mongodb.createUser(interaction.member.user.id);
+        } else {
+            console.log(user);
+        }
 
         if(!command) {
             console.error(`No command matching ${interaction.commandName} was found`);
@@ -72,7 +74,7 @@ client.on(Events.InteractionCreate, async interaction =>{
             await command.execute(interaction);
         }catch(err){
             console.error(err);
-            await interaction.reply({content: 'AHH SOMETHING BROKE', ephemeral: true});
+            await interaction.message.edit('AHH SOMETHING BROKE');
         }
     }
 });
