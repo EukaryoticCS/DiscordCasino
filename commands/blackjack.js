@@ -1,9 +1,5 @@
 const {SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events} = require('discord.js');
 
-async function yell(interaction){
-return interaction.reply("I'VE BEEN CLICKED!!");
-}
-
 module.exports ={
 	data: new SlashCommandBuilder().setName('blackjack').setDescription('Our main play blackjack command'),
 	 async execute(interaction){ 
