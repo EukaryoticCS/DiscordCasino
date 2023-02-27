@@ -18,6 +18,7 @@ async function getUser(discordID) { //Will have to await the function to get the
     const user = await User.findOne({discordID: discordID}).exec();
     if (!user) {
         console.log("User doesn't exist!");
+        return null;
     } else {
         // console.log(user);
         return user;

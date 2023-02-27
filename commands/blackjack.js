@@ -1,8 +1,12 @@
-const {SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events} = require('discord.js');
+const {SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle} = require('discord.js');
+const deckofcards = require('../services/deckofcards.js');
 
 module.exports ={
 	data: new SlashCommandBuilder().setName('blackjack').setDescription('Our main play blackjack command'),
-	 async execute(interaction){ 
+	async execute(interaction){ 
+
+        interaction.deferReply();
+        await deckofcards.startBlackJack();
 		const btnBlackjack = new ActionRowBuilder()
 		.addComponents(
 			new ButtonBuilder()
@@ -23,6 +27,7 @@ module.exports ={
 			.setStyle(ButtonStyle.Danger),
 		)
 		
-		interaction.reply({content: 'this is blackjack!', components: [btnBlackjack]});
+		interaction.editReply({content: 'this is blackjack!', components: [btnBlackjack]});
+        
 	},
 };
