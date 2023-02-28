@@ -1,7 +1,7 @@
 const {SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle} = require('discord.js');
 const deckofcards = require('../services/deckofcards.js');
 
-module.exports = {
+module.exports ={
 	data: new SlashCommandBuilder().setName('blackjack').setDescription('Our main play blackjack command'),
 	async execute(interaction){ 
 
@@ -16,8 +16,20 @@ module.exports = {
 		)
 		.addComponents(
 			new ButtonBuilder()
-			.setCustomId('btnBet')
-			.setLabel('Bet')
+			.setCustomId('btnBJBet1')
+			.setLabel('Bet 1')
+			.setStyle(ButtonStyle.Success),
+		)
+		.addComponents(
+			new ButtonBuilder()
+			.setCustomId('btnBJBet10')
+			.setLabel('Bet 10')
+			.setStyle(ButtonStyle.Success),
+		)
+		.addComponents(
+			new ButtonBuilder()
+			.setCustomId('btnBJBet100')
+			.setLabel('Bet 100')
 			.setStyle(ButtonStyle.Success),
 		)
 		.addComponents(
@@ -27,7 +39,7 @@ module.exports = {
 			.setStyle(ButtonStyle.Danger),
 		)
 		
-		interaction.editReply({content: 'this is blackjack!', components: [btnBlackjack]});
+		interaction.followUp({content: 'this is blackjack!', components: [btnBlackjack], ephemeral:true});
         
 	},
 };
