@@ -3,7 +3,7 @@ require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
 var mongodb = require('./mongodb.js')
-const {Client,Events,GatewayIntentBits, Collection, ButtonInteraction} = require("discord.js");
+const {Client,Events,GatewayIntentBits, Collection, ButtonInteraction, InteractionResponse} = require("discord.js");
 const deckofcards = require('./services/deckofcards.js');
 //Creating a new instance of our client
 const client = new Client({intents:[GatewayIntentBits.Guilds]})
@@ -16,6 +16,7 @@ const embeded = require("./Embeded")
 const commandFiles = fs.readdirSync(commandsPath).filter(file=>file.endsWith('.js'));
 
 let deck_id = null;
+var bet = 0;
 
 
 //Loops through all the files in the command folder
@@ -38,15 +39,28 @@ client.on(Events.InteractionCreate, async interaction =>{
             deckofcards.drawPlayerCards(1);
             interaction.reply('Card drawn!');
         }
-        if(interaction.customId == 'btnBet'){
-            interaction.reply('You bet! :moneybag:')
+        if(interaction.customId == 'btnBJBet1'){
+            bet +=1;
+            interaction.reply('You bet 1 currecy! :moneybag: Your current bet is '+bet);
+        }
+        if(interaction.customId == 'btnBJBet10'){
+            bet+=10;
+            interaction.reply('You bet 10 currecy! :moneybag: Your current bet is '+bet);
+        }
+        if(interaction.customId == 'btnBJBet100'){
+            bet+=100;
+            interaction.reply('You bet 100 currecy! :moneybag: Your current bet is '+bet);
         }
         if(interaction.customId == 'btnStand'){
             // await interaction.deferReply();
-                bet = 30;
-                console.log(deckofcards.checkBlackJackWin(bet, interaction));
-                interaction.message.delete();
+            // console.log(bet);
+            console.log(deckofcards.checkBlackJackWin(bet, interaction));
+            bet = 0;
+            // console.log(bet);
         }
+
+
+
     }
 
     if(interaction.isChatInputCommand()) {
