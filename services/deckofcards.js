@@ -105,32 +105,32 @@ function checkBlackJackWin(bet, interaction) {
 
     if (playerScore == 0 && dealerScore == 0) {
         console.log("Player and Dealer busted! Bets returned...");
-        interaction.message.edit("Player and Dealer busted! Bets returned...");
+        interaction.reply("Player and Dealer busted! Bets returned...");
         return bet;
     } else if (playerScore == 0) {
         console.log("Player busted! Bets given to Dealer...");
-        interaction.message.edit("Player busted! Bets given to Dealer...");
+        interaction.reply("Player busted! Bets given to Dealer...");
         return 0;
     } else if (playerScore == dealerScore) {
         console.log("Player and Dealer tied! Bets returned...");
-        interaction.message.edit("Player and Dealer tied! Bets returned...");
+        interaction.reply("Player and Dealer tied! Bets returned...");
         return bet;
     } else if (playerScore < dealerScore) {
         console.log("Dealer wins: " + dealerScore + " vs. " + playerScore);
-        interaction.message.edit("Dealer wins: " + dealerScore + " vs. " + playerScore);
+        interaction.reply("Dealer wins: " + dealerScore + " vs. " + playerScore);
         return 0;
     } else {
         console.log("Player wins: " + playerScore + " vs. " + dealerScore);
         if (playerCards.cards.length >= 5) {
             console.log("FIVE CARD CHARLIE WHATTTT");
-            interaction.message.edit("Player wins: " + playerScore + " (FIVE CARD CHARLIE WHATTTT)" + " vs. " + dealerScore);
+            interaction.reply("Player wins: " + playerScore + " (FIVE CARD CHARLIE WHATTTT)" + " vs. " + dealerScore);
             return bet * 4;
         } else if (playerCards.cards.length == 2 && playerScore == 21) {
             console.log("BLACKJACK!!!");
-            interaction.message.edit("Player wins: " + playerScore + " (BLACKJACK!!!)" + " vs. " + dealerScore);
+            interaction.reply("Player wins: " + playerScore + " (BLACKJACK!!!)" + " vs. " + dealerScore);
             return bet * 3;
         } else {
-            interaction.message.edit("Player wins: " + playerScore + " vs. " + dealerScore);
+            interaction.reply("Player wins: " + playerScore + " vs. " + dealerScore);
             return bet * 2;
         }
     }

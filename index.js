@@ -27,7 +27,7 @@ for(const file of commandFiles){
         client.commands.set(command.data.name, command);
     }
     else{
-        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "exexcute" property`);
+        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property`);
     }  
 }
 
@@ -36,21 +36,16 @@ client.on(Events.InteractionCreate, async interaction =>{
         if(interaction.customId == 'btnHit'){
             // console.log(interaction.message);
             deckofcards.drawPlayerCards(1);
-            interaction.message.edit('Card drawn!');
+            interaction.reply('Card drawn!');
         }
         if(interaction.customId == 'btnBet'){
-            interaction.message.edit('You bet! :moneybag:')
+            interaction.reply('You bet! :moneybag:')
         }
         if(interaction.customId == 'btnStand'){
             // await interaction.deferReply();
                 bet = 30;
                 console.log(deckofcards.checkBlackJackWin(bet, interaction));
-                // interaction.reply('Fuckin nerd. Bet more next time :x:');
-            // try {
-                
-            // } catch {
-            //     console.log("oopsie");
-            // }
+                interaction.message.delete();
         }
     }
 
@@ -74,7 +69,7 @@ client.on(Events.InteractionCreate, async interaction =>{
             await command.execute(interaction);
         }catch(err){
             console.error(err);
-            await interaction.message.edit('AHH SOMETHING BROKE');
+            await interaction.reply('AHH SOMETHING BROKE');
         }
     }
 });
