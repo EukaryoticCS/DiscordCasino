@@ -11,13 +11,27 @@ const client = new Client({intents:[GatewayIntentBits.Guilds]})
 client.commands = new Collection();
 //goes into the commands folder to find commands
 const commandsPath = path.join(__dirname, 'commands');
-const embeded = require("./Embeded")
+const embeded = require("./Embeded");
+const { isAsyncFunction } = require('node:util/types');
+const { isMainThread } = require('node:worker_threads');
 //Filters classes in the command folder. Looks to see if it ends with .js or not
 const commandFiles = fs.readdirSync(commandsPath).filter(file=>file.endsWith('.js'));
-
+const slots = [":banana:", ":bell:",":cherries:", ":lemon:", ":melon:", ":tangerine:", ":seven:"]
 let deck_id = null;
 var bet = 0;
 
+function Spin(){
+    let num1 =0;
+    let num2 =0;
+    let num3 =0;
+    num1=Math.floor(Math.random()*7);
+    num2=Math.floor(Math.random()*7);
+    num3=Math.floor(Math.random()*7);
+    console.log(num1);
+    console.log(num2);
+    console.log(num3);
+    return [num1, num2, num3];
+}
 
 //Loops through all the files in the command folder
 for(const file of commandFiles){
@@ -32,20 +46,22 @@ for(const file of commandFiles){
     }  
 }
 
+
+
 client.on(Events.InteractionCreate, async interaction =>{
     if(interaction.isButton()) {
         if(interaction.customId == 'btnHit'){
             interaction.reply('You hit hit! :smile:');
         }
-        if(interaction.customId == 'btnBJBet1'){
+        if(interaction.customId == 'btnBet1'){
             bet +=1;
             interaction.reply('You bet 1 currecy! :moneybag: Your current bet is '+bet);
         }
-        if(interaction.customId == 'btnBJBet10'){
+        if(interaction.customId == 'btnBet10'){
             bet+=10;
             interaction.reply('You bet 10 currecy! :moneybag: Your current bet is '+bet);
         }
-        if(interaction.customId == 'btnBJBet100'){
+        if(interaction.customId == 'btnBet100'){
             bet+=100;
             interaction.reply('You bet 100 currecy! :moneybag: Your current bet is '+bet);
         }
@@ -55,6 +71,12 @@ client.on(Events.InteractionCreate, async interaction =>{
             console.log(deckofcards.checkBlackJackWin(bet, interaction));
             bet = 0;
             console.log(bet);
+        }
+        if(interaction.customId == 'btnSpin')
+        {
+            let indexes = Spin();
+            console.log(indexes);
+            interaction.reply(slots[indexes[0]] + slots[indexes[1]] + slots[indexes[2]]);
         }
 
 

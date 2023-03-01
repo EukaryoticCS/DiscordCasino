@@ -3,28 +3,22 @@ const {SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle} = requ
 module.exports = {
     data: new SlashCommandBuilder().setName('slots').setDescription('Brings up the slots'),
 	async execute(interaction){ 
-        const btnBlackjack = new ActionRowBuilder()
+        const btnSlots = new ActionRowBuilder()
 		.addComponents(
 			new ButtonBuilder()
-			.setCustomId('btnHit')
-			.setLabel('Hit')
-			.setStyle(ButtonStyle.Primary),
-		)
-		.addComponents(
-			new ButtonBuilder()
-			.setCustomId('btnSLBet1')
+			.setCustomId('btnBet1')
 			.setLabel('Bet  1')
 			.setStyle(ButtonStyle.Success),
 		)
         .addComponents(
 			new ButtonBuilder()
-			.setCustomId('btnSLBet10')
+			.setCustomId('btnBet10')
 			.setLabel('Bet  10')
 			.setStyle(ButtonStyle.Success),
 		)
         .addComponents(
 			new ButtonBuilder()
-			.setCustomId('btnSLBet100')
+			.setCustomId('btnBet100')
 			.setLabel('Bet  100')
 			.setStyle(ButtonStyle.Success),
 		)
@@ -34,6 +28,7 @@ module.exports = {
             .setLabel('Spin')
             .setStyle(ButtonStyle.Success),
         )
-		interaction.reply({content: 'slots! :grapes: :cherries: :peach:', components: [btnBlackjack], ephemeral: true});
+		interaction.reply({content: 'slots!', components: [btnSlots]});
+		return btnSlots
 	},
 }
