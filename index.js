@@ -14,12 +14,10 @@ const commandsPath = path.join(__dirname, 'commands');
 const embeded = require("./Embeded")
 //Filters classes in the command folder. Looks to see if it ends with .js or not
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const btnBlackjack = require("./schemas/btnBlackjack.js");
 
-let deck_id = null;
 var bet = 0;
 var userID;
-var replyMsg;
-
 
 //Loops through all the files in the command folder
 for (const file of commandFiles) {
@@ -37,26 +35,22 @@ for (const file of commandFiles) {
 client.on(Events.InteractionCreate, async interaction => {
     if (interaction.isButton()) {
         if (interaction.member.user.id == userID) {
-            if (replyMsg != null) {
-                console.log(replyMsg);
-                replyMsg.interaction.message.delete();
-            }
             if (interaction.customId == 'btnHit') {
                 // console.log(interaction.message);
                 deckofcards.drawPlayerCards(1);
-                replyMsg = interaction.reply('Card drawn!');
+                interaction.reply('Card drawn!');
             }
             if (interaction.customId == 'btnBJBet1') {
                 bet += 1;
-                replyMsg = interaction.reply('You bet 1 currency! :moneybag: Your current bet is ' + bet);
+                interaction.reply('You bet 1 currency! :moneybag: Your current bet is ' + bet);
             }
             if (interaction.customId == 'btnBJBet10') {
                 bet += 10;
-                replyMsg = interaction.reply('You bet 10 currency! :moneybag: Your current bet is ' + bet);
+                interaction.reply('You bet 10 currency! :moneybag: Your current bet is ' + bet);
             }
             if (interaction.customId == 'btnBJBet100') {
                 bet += 100;
-                replyMsg = interaction.reply('You bet 100 currency! :moneybag: Your current bet is ' + bet);
+                interaction.reply('You bet 100 currency! :moneybag: Your current bet is ' + bet);
             }
             if (interaction.customId == 'btnStand') {
                 // await interaction.deferReply();
@@ -90,7 +84,7 @@ client.on(Events.InteractionCreate, async interaction => {
             if (interaction.commandName == 'blackjack') {
                 console.log('running blackjack!');
             }
-            await command.execute(interaction);
+            await command.execute(interaction, btnBlackjack.btnBlackjack);
         } catch (err) {
             console.error(err);
             await interaction.reply('AHH SOMETHING BROKE');
