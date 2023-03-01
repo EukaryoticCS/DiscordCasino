@@ -7,6 +7,6 @@ module.exports ={
 
 		// interaction.deferReply();
         await deckofcards.startBlackJack();
-		interaction.followUp({content: 'this is blackjack!', components: [btnBlackjack]});
+		interaction.followUp({content: 'Welcome to Blackjack! Here are your cards: ' + deckofcards.getPlayerCards(), components: [btnBlackjack]});
 	},
 };

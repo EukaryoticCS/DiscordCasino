@@ -8,7 +8,7 @@ let dealerCards = {cards: []};
 async function makeNewDeck() {
     let res = await axios({
         method: 'get',
-        url: apiPath + '/api/deck/new/shuffle'//Endpoint goes here
+        url: apiPath + '/api/deck/new/shuffle?deck_count=6'//Endpoint goes here
     });
     deck_id = await res.data.deck_id;
 }
@@ -35,6 +35,16 @@ async function drawPlayerCards(count) {
         console.log(res.data.cards[card]);
         playerCards.cards.push(res.data.cards[card]);
     }
+    return res.data.cards;
+}
+
+function getPlayerCards() {
+    let strCards = "";
+    cards = playerCards.cards;
+    for (card in cards) {
+        strCards += cards[card].value.toLowerCase() + " of " + cards[card].suit.toLowerCase() + ", ";
+    }
+    return strCards;
 }
 
 async function startBlackJack() {
@@ -44,16 +54,6 @@ async function startBlackJack() {
     await makeNewDeck();
     await drawDealerCards(2);
     await drawPlayerCards(2);
-
-    // console.log(playerCards);
-
-    // await drawCards('Player', deck_id, 2);
-    // await drawCards('Dealer', deck_id, 2);
-    // console.log(await getPlayerCards('Player', deck_id));
-    // console.log(await getPlayerCards('Dealer', deck_id));
-
-    // getHandValue(await getPlayerCards('Player', deck_id));
-    // getHandValue(await getPlayerCards('Dealer', deck_id));
 }
 
 function getHandValue(cards) {
@@ -145,6 +145,7 @@ module.exports = {
     makeNewDeck,
     drawDealerCards,
     drawPlayerCards,
+    getPlayerCards,
     startBlackJack,
     getHandValue,
     checkBlackJackWin

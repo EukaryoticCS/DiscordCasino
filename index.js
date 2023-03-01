@@ -18,6 +18,7 @@ const btnBlackjack = require("./schemas/btnBlackjack.js");
 
 var bet = 0;
 var userID;
+let cards;
 
 //Loops through all the files in the command folder
 for (const file of commandFiles) {
@@ -37,27 +38,32 @@ client.on(Events.InteractionCreate, async interaction => {
         if (interaction.member.user.id == userID) {
             if (interaction.customId == 'btnHit') {
                 // console.log(interaction.message);
-                deckofcards.drawPlayerCards(1);
-                interaction.reply('Card drawn!');
+                cards = await deckofcards.drawPlayerCards(1);
+                // console.log(interaction);
+                interaction.message.edit({content: interaction.message.content, components: []});
+                interaction.reply({content: 'Card drawn! Here are your cards: ' + deckofcards.getPlayerCards(), components: [btnBlackjack.btnBlackjack]});
             }
             if (interaction.customId == 'btnBJBet1') {
                 bet += 1;
-                interaction.reply('You bet 1 currency! :moneybag: Your current bet is ' + bet);
+                interaction.message.edit({content: interaction.message.content, components: []});
+                interaction.reply({content: 'You bet 1 currency! :moneybag: Your current bet is ' + bet, components: [btnBlackjack.btnBlackjack]});
             }
             if (interaction.customId == 'btnBJBet10') {
                 bet += 10;
-                interaction.reply('You bet 10 currency! :moneybag: Your current bet is ' + bet);
+                interaction.message.edit({content: interaction.message.content, components: []});
+                interaction.reply({content: 'You bet 10 currency! :moneybag: Your current bet is ' + bet, components: [btnBlackjack.btnBlackjack]});
             }
             if (interaction.customId == 'btnBJBet100') {
                 bet += 100;
-                interaction.reply('You bet 100 currency! :moneybag: Your current bet is ' + bet);
+                interaction.message.edit({content: interaction.message.content, components: []});
+                interaction.reply({content: 'You bet 100 currency! :moneybag: Your current bet is ' + bet, components: [btnBlackjack.btnBlackjack]});
             }
             if (interaction.customId == 'btnStand') {
                 // await interaction.deferReply();
                 // console.log(bet);
                 console.log(deckofcards.checkBlackJackWin(bet, interaction));
                 bet = 0;
-                interaction.message.delete
+                interaction.message.edit({content: interaction.message.content, components: []});
                 // console.log(bet);
             }
         } else {
