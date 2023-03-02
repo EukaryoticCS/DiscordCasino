@@ -124,14 +124,14 @@ function checkBlackJackWin(bet, interaction) {
         console.log("Player wins: " + playerScore + " vs. " + dealerScore);
         if (playerCards.cards.length >= 5) {
             console.log("FIVE CARD CHARLIE WHATTTT");
-            interaction.reply("Player wins: " + playerScore + " (FIVE CARD CHARLIE WHATTTT)" + " vs. " + dealerScore);
+            interaction.reply("Player wins: " + playerScore + " (FIVE CARD CHARLIE WHATTTT)" + " vs. " + dealerScore + "... +" + bet * 4 + " currency!");
             return bet * 4;
         } else if (playerCards.cards.length == 2 && playerScore == 21) {
             console.log("BLACKJACK!!!");
-            interaction.reply("Player wins: " + playerScore + " (BLACKJACK!!!)" + " vs. " + dealerScore);
+            interaction.reply("Player wins: " + playerScore + " (BLACKJACK!!!)" + " vs. " + dealerScore + "... +" + bet * 3 + " currency!");
             return bet * 3;
         } else {
-            interaction.reply("Player wins: " + playerScore + " vs. " + dealerScore);
+            interaction.reply("Player wins: " + playerScore + " vs. " + dealerScore + "... +" + bet * 2 + " currency!");
             return bet * 2;
         }
     }
