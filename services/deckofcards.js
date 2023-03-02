@@ -20,7 +20,7 @@ async function drawDealerCards(count) {
         url: apiPath + '/api/deck/' + deck_id + '/draw/?count=' + count
     });
     for (card in res.data.cards) {
-        console.log(res.data.cards[card]);
+        // console.log(res.data.cards[card]);
         dealerCards.cards.push(res.data.cards[card]);
     }
 }
@@ -32,7 +32,7 @@ async function drawPlayerCards(count) {
         url: apiPath + '/api/deck/' + deck_id + '/draw/?count=' + count
     });
     for (card in res.data.cards) {
-        console.log(res.data.cards[card]);
+        // console.log(res.data.cards[card]);
         playerCards.cards.push(res.data.cards[card]);
     }
     return res.data.cards;
@@ -44,7 +44,7 @@ function getPlayerCards() {
     for (card in cards) {
         strCards += cards[card].value.toLowerCase() + " of " + cards[card].suit.toLowerCase() + ", ";
     }
-    return strCards;
+    return strCards.slice(0, -2);
 }
 
 async function startBlackJack() {
@@ -61,9 +61,12 @@ function getHandValue(cards) {
     for (card in cards.cards) { //Push Aces to the back of the hand for easier parsing
         // console.log(cards.cards[card]);
         if (cards.cards[card].value == 'ACE') {
-            cards.cards.push(cards.cards.splice(cards.cards.indexOf(card), 1)[0]);
+            cards.cards.push(cards.cards.splice(card, 1)[0]);
         }
     }
+
+    // console.log("Player cards:");
+    // console.log(cards);
 
     value = 0;
 
@@ -93,14 +96,12 @@ function getHandValue(cards) {
 
 function checkBlackJackWin(bet, interaction) {
     playerScore = getHandValue(playerCards);
-    console.log("Player cards:");
-    console.log(playerCards);
     dealerScore = getHandValue(dealerCards);
 
-    if (playerScore > 21)
+    if (playerScore > 21) //Player busted
         playerScore = 0;
 
-    if (dealerScore > 21)
+    if (dealerScore > 21) //Dealer busted
         dealerScore = 0;
 
     if (playerScore == 0 && dealerScore == 0) {

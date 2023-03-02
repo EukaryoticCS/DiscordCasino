@@ -32,8 +32,13 @@ async function createUser(discordID) {
     return user;
 }
 
+async function updateUser(discordID, bet) {
+    await User.findOneAndUpdate({discordID: discordID}, {$inc: {availableFunds: bet}});
+}
+
 module.exports = {
     User,
     getUser,
-    createUser
+    createUser,
+    updateUser
 }
