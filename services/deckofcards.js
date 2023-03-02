@@ -8,21 +8,43 @@ let dealerCards = {cards: []};
 async function makeNewDeck() {
     let res = await axios({
         method: 'get',
-        url: apiPath + '/api/deck/new/shuffle'//Endpoint goes here
+        url: apiPath + '/api/deck/new/shuffle?deck_count=6'//Endpoint goes here
     });
     deck_id = await res.data.deck_id;
 }
 
-async function drawCards(playerHand, deck_id, count) {
+async function drawDealerCards(count) {
     // console.log(count);
     res = await axios({
         method: 'get',
         url: apiPath + '/api/deck/' + deck_id + '/draw/?count=' + count
     });
     for (card in res.data.cards) {
-        console.log(res.data.cards[card]);
-        playerHand.cards.push(res.data.cards[card]);
+        // console.log(res.data.cards[card]);
+        dealerCards.cards.push(res.data.cards[card]);
     }
+}
+
+async function drawPlayerCards(count) {
+    // console.log(count);
+    res = await axios({
+        method: 'get',
+        url: apiPath + '/api/deck/' + deck_id + '/draw/?count=' + count
+    });
+    for (card in res.data.cards) {
+        // console.log(res.data.cards[card]);
+        playerCards.cards.push(res.data.cards[card]);
+    }
+    return res.data.cards;
+}
+
+function getPlayerCards() {
+    let strCards = "";
+    cards = playerCards.cards;
+    for (card in cards) {
+        strCards += cards[card].value.toLowerCase() + " of " + cards[card].suit.toLowerCase() + ", ";
+    }
+    return strCards.slice(0, -2);
 }
 
 async function startBlackJack() {
@@ -30,18 +52,8 @@ async function startBlackJack() {
     playerCards = {cards: []};
     dealerCards = {cards: []};
     await makeNewDeck();
-    await drawCards(playerCards, deck_id, 2);
-    await drawCards(dealerCards, deck_id, 2);
-
-    // console.log(playerCards);
-
-    // await drawCards('Player', deck_id, 2);
-    // await drawCards('Dealer', deck_id, 2);
-    // console.log(await getPlayerCards('Player', deck_id));
-    // console.log(await getPlayerCards('Dealer', deck_id));
-
-    // getHandValue(await getPlayerCards('Player', deck_id));
-    // getHandValue(await getPlayerCards('Dealer', deck_id));
+    await drawDealerCards(2);
+    await drawPlayerCards(2);
 }
 
 function getHandValue(cards) {
@@ -49,9 +61,12 @@ function getHandValue(cards) {
     for (card in cards.cards) { //Push Aces to the back of the hand for easier parsing
         // console.log(cards.cards[card]);
         if (cards.cards[card].value == 'ACE') {
-            cards.cards.push(cards.cards.splice(cards.cards.indexOf(card), 1)[0]);
+            cards.cards.push(cards.cards.splice(card, 1)[0]);
         }
     }
+
+    // console.log("Player cards:");
+    // console.log(cards);
 
     value = 0;
 
@@ -83,10 +98,10 @@ function checkBlackJackWin(bet, interaction) {
     playerScore = getHandValue(playerCards);
     dealerScore = getHandValue(dealerCards);
 
-    if (playerScore > 21)
+    if (playerScore > 21) //Player busted
         playerScore = 0;
 
-    if (dealerScore > 21)
+    if (dealerScore > 21) //Dealer busted
         dealerScore = 0;
 
     if (playerScore == 0 && dealerScore == 0) {
@@ -129,7 +144,9 @@ module.exports = {
     playerCards,
     dealerCards,
     makeNewDeck,
-    drawCards,
+    drawDealerCards,
+    drawPlayerCards,
+    getPlayerCards,
     startBlackJack,
     getHandValue,
     checkBlackJackWin
