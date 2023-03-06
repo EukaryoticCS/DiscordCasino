@@ -53,6 +53,11 @@ async function startBlackJack() {
     dealerCards = {cards: []};
     await makeNewDeck();
     await drawDealerCards(2);
+    //auto dealer moves. check dealer card and stop draw at at least 14
+    while (getHandValue(dealerCards) < 17){
+        drawDealerCards(1);
+    }
+
     await drawPlayerCards(2);
 }
 
