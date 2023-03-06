@@ -47,6 +47,16 @@ function getPlayerCards() {
     return strCards.slice(0, -2);
 }
 
+function getDealerCards() {
+    let strCards = "";
+    cards = dealerCards.cards;
+    strCards += cards[0].value.toLowerCase() + " of " + cards[0].suit.toLowerCase() + ", "
+    for (count = 1; count < cards.length; count++) {
+        strCards += "???, "
+    }
+    return (strCards.slice(0, -2));
+}
+
 async function startBlackJack() {
     deck_id = '';
     playerCards = {cards: []};
@@ -145,13 +155,11 @@ function checkBlackJackWin(bet, interaction) {
 // startBlackJack();
 
 module.exports = {
-    deck_id,
-    playerCards,
-    dealerCards,
     makeNewDeck,
     drawDealerCards,
     drawPlayerCards,
     getPlayerCards,
+    getDealerCards,
     startBlackJack,
     getHandValue,
     checkBlackJackWin
