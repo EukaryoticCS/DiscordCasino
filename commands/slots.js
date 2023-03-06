@@ -34,6 +34,6 @@ module.exports = {
             .setLabel('Spin')
             .setStyle(ButtonStyle.Success),
         )
-		interaction.reply({content: 'slots! :grapes: :cherries: :peach:', components: [btnBlackjack], ephemeral: true});
+		interaction.followUp({content: 'slots! :grapes: :cherries: :peach:', components: [btnBlackjack], ephemeral: true});
 	},
 }

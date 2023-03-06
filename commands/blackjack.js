@@ -7,7 +7,7 @@ module.exports ={
 
 		// interaction.deferReply();
         await deckofcards.startBlackJack();
-		interaction.followUp({content: 'Welcome to Blackjack!\n\nDEALER CARDS: ' + deckofcards.getDealerCards() + '\n\nCARDS: ' + deckofcards.getPlayerCards() + "\nBET: 30", components: [btnBlackjack]});
+		interaction.followUp({content: 'Welcome to Blackjack!\n\nDEALER CARDS: ' + deckofcards.getDealerCards() + '\nCARDS: ' + deckofcards.getPlayerCards() + "\nBET: 30", components: [btnBlackjack]});
 		//I hard-coded 30 lol, makes it easier
 	},
 };
