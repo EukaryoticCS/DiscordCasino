@@ -140,9 +140,6 @@ function checkBlackJackWin(bet, interaction) {
 // startBlackJack();
 
 module.exports = {
-    deck_id,
-    playerCards,
-    dealerCards,
     makeNewDeck,
     drawDealerCards,
     drawPlayerCards,
