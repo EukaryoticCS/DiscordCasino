@@ -46,34 +46,34 @@ client.on(Events.InteractionCreate, async interaction => {
             if (interaction.customId == 'btnBJBet1') {
                 await interaction.deferReply();
                 if (user.availableFunds < 1) {
-                    interaction.editReply({content: "You don't have enough money to bet! :rofl:", ephemeral: true});
+                    interaction.followUp({content: "You don't have enough money to bet! :rofl:", ephemeral: true});
                 } else {
                     mongodb.updateUser(userID, -1);
                     bet += 1;
                     interaction.message.edit({content: interaction.message.content, components: []});
-                    interaction.editReply({content: 'You bet 1 currency! :moneybag:\n\nDEALER CARDS: ' + deckofcards.getDealerCards() + '\nYOUR CARDS: ' + deckofcards.getPlayerCards() + "\nBET: " + bet, components: [btnBlackjack.btnBlackjack]});
+                    interaction.followUp({content: 'You bet 1 currency! :moneybag:\n\nDEALER CARDS: ' + deckofcards.getDealerCards() + '\nYOUR CARDS: ' + deckofcards.getPlayerCards() + "\nBET: " + bet, components: [btnBlackjack.btnBlackjack]});
                 }
             }
             if (interaction.customId == 'btnBJBet10') {
                 await interaction.deferReply();
                 if (user.availableFunds < 10) {
-                    interaction.editReply({content: "You don't have enough money to bet! :rofl:\n\nDEALER CARDS: ", ephemeral: true});
+                    interaction.followUp({content: "You don't have enough money to bet! :rofl:\n\nDEALER CARDS: ", ephemeral: true});
                 } else {
                     mongodb.updateUser(userID, -10);
                     bet += 10;
                     interaction.message.edit({content: interaction.message.content, components: []});
-                    interaction.editReply({content: 'You bet 10 currency! :moneybag:\n\nDEALER CARDS:' + deckofcards.getDealerCards() + '\nYOUR CARDS: ' + deckofcards.getPlayerCards() + "\nBET: " + bet, components: [btnBlackjack.btnBlackjack]});
+                    interaction.followUp({content: 'You bet 10 currency! :moneybag:\n\nDEALER CARDS:' + deckofcards.getDealerCards() + '\nYOUR CARDS: ' + deckofcards.getPlayerCards() + "\nBET: " + bet, components: [btnBlackjack.btnBlackjack]});
                 }
             }
             if (interaction.customId == 'btnBJBet100') {
                 await interaction.deferReply();
                 if (user.availableFunds < 100) {
-                    interaction.editReply({content: "You don't have enough money to bet! :rofl:", ephemeral: true});
+                    interaction.followUp({content: "You don't have enough money to bet! :rofl:", ephemeral: true});
                 } else {
                     mongodb.updateUser(userID, -100);
                     bet += 100;
                     interaction.message.edit({content: interaction.message.content, components: []});
-                    interaction.editReply({content: 'You bet 100 currency! :moneybag:\n\nDEALER CARDS: ' + deckofcards.getDealerCards() + '\nYOUR CARDS: ' + deckofcards.getPlayerCards() + "\nBET: " + bet, components: [btnBlackjack.btnBlackjack]});
+                    interaction.followUp({content: 'You bet 100 currency! :moneybag:\n\nDEALER CARDS: ' + deckofcards.getDealerCards() + '\nYOUR CARDS: ' + deckofcards.getPlayerCards() + "\nBET: " + bet, components: [btnBlackjack.btnBlackjack]});
                 }
             }
             if (interaction.customId == 'btnStand') {
@@ -114,6 +114,8 @@ client.on(Events.InteractionCreate, async interaction => {
                     bet = 30;
                     await command.execute(interaction, btnBlackjack.btnBlackjack);
                 }
+            } else {
+                await command.execute(interaction);
             }
         } catch (err) {
             console.error(err);
