@@ -47,12 +47,27 @@ function getPlayerCards() {
     return strCards.slice(0, -2);
 }
 
+function getDealerCards() {
+    let strCards = "";
+    cards = dealerCards.cards;
+    strCards += cards[0].value.toLowerCase() + " of " + cards[0].suit.toLowerCase() + ", "
+    for (count = 1; count < cards.length; count++) {
+        strCards += "???, "
+    }
+    return (strCards.slice(0, -2));
+}
+
 async function startBlackJack() {
     deck_id = '';
     playerCards = {cards: []};
     dealerCards = {cards: []};
     await makeNewDeck();
     await drawDealerCards(2);
+    //auto dealer moves. check dealer card and stop draw at at least 14
+    while (getHandValue(dealerCards) < 17){
+        await drawDealerCards(1);
+    }
+
     await drawPlayerCards(2);
 }
 
@@ -140,13 +155,11 @@ function checkBlackJackWin(bet, interaction) {
 // startBlackJack();
 
 module.exports = {
-    deck_id,
-    playerCards,
-    dealerCards,
     makeNewDeck,
     drawDealerCards,
     drawPlayerCards,
     getPlayerCards,
+    getDealerCards,
     startBlackJack,
     getHandValue,
     checkBlackJackWin
