@@ -18,7 +18,8 @@ const { isMainThread } = require('node:worker_threads');
 const commandFiles = fs.readdirSync(commandsPath).filter(file=>file.endsWith('.js'));
 const btnBlackjack = require("./schemas/btnBlackjack.js");
 const btnSlots = require('./schemas/btnSlots.js');
-const slots = [":banana:", ":bell:",":cherries:", ":lemon:", ":melon:", ":tangerine:", ":seven:"]
+const slotsWin = require('./services/checkSlotsWin.js');
+const slots = [":cherries:",":cherries:", ":cherries:", ":cherries:", ":bell:",":bell:", ":bell:",":ring: ",":ring: ", ":seven:"]
 var bet = 0;
 var user;
 var userID;
@@ -27,17 +28,14 @@ function Spin(){
     let num1 =0;
     let num2 =0;
     let num3 =0;
-    num1=Math.floor(Math.random()*7);
-    num2=Math.floor(Math.random()*7);
-    num3=Math.floor(Math.random()*7);
+    num1=Math.floor(Math.random()*10);
+    num2=Math.floor(Math.random()*10);
+    num3=Math.floor(Math.random()*10);
     console.log(num1);
     console.log(num2);
     console.log(num3);
     return [num1, num2, num3];
 }
-
-
-
 
 //Loops through all the files in the command folder
 for (const file of commandFiles) {
@@ -103,12 +101,48 @@ client.on(Events.InteractionCreate, async interaction => {
                 interaction.message.edit({content: interaction.message.content, components: []});
                 // console.log(bet);
             }
+            if(interaction.customId == 'btnSlotsBet1'){
+                await interaction.deferReply();
+                if (user.availableFunds < 1) {
+                    interaction.editReply({content: "You don't have enough money to bet! :rofl:", ephemeral: true});
+                } else {
+                    mongodb.updateUser(userID, -1);
+                    bet += 1;
+                    interaction.message.edit({content: interaction.message.content, components: []});
+                    interaction.editReply({content: 'You bet 1 currency! :moneybag:\n\n ' + "\nBET: " + bet, components: [btnSlots.btnSlots]});
+                } 
+            }
+            if(interaction.customId == 'btnSlotsBet10'){
+                await interaction.deferReply();
+                if (user.availableFunds < 10) {
+                    interaction.editReply({content: "You don't have enough money to bet! :rofl:", ephemeral: true});
+                } else {
+                    mongodb.updateUser(userID, -10);
+                    bet += 10;
+                    interaction.message.edit({content: interaction.message.content, components: []});
+                    interaction.editReply({content: 'You bet 10 currency! :moneybag:\n\n ' + "\nBET: " + bet, components: [btnSlots.btnSlots]});
+                }
+            }
+            if(interaction.customId == 'btnSlotsBet100'){
+                await interaction.deferReply();
+                if (user.availableFunds < 100) {
+                    interaction.editReply({content: "You don't have enough money to bet! :rofl:", ephemeral: true});
+                } else {
+                    mongodb.updateUser(userID, -100);
+                    bet += 100;
+                    interaction.message.edit({content: interaction.message.content, components: []});
+                    interaction.editReply({content: 'You bet 100 currency! :moneybag:\n\n ' + "\nBET: " + bet, components: [btnSlots.btnSlots]});
+                }
+            }
             if(interaction.customId == 'btnSpin'){
                 Spin();
-                interaction.reply(slots[0],[1],[2]);
+                console.log(slots[Spin[0]],[Spin[1]]+[Spin[2]]);
+                interaction.reply(slots[Spin[0]],[Spin[1]]+[Spin[2]]);
+                mongodb.updateUser(userID, slotsWin.checkSlotsWin(bet,interaction,slots[0],[1],[2]));
+                
             }
         } else {
-            interaction.reply({content: "That's not your game, jackass!", ephemeral:true})
+            interaction.followUp({content: "That's not your game, jackass!", ephemeral:true})
         }
     }
 
