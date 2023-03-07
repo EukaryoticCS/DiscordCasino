@@ -31,10 +31,33 @@ function Spin(){
     num1=Math.floor(Math.random()*10);
     num2=Math.floor(Math.random()*10);
     num3=Math.floor(Math.random()*10);
-    console.log(num1);
-    console.log(num2);
-    console.log(num3);
     return [num1, num2, num3];
+}
+
+function checkSlotsWin(bet, interaction){
+    let st1 = Spin()[0];
+    let st2 = Spin()[1];
+    let st3 = Spin()[2];
+    if(st1 <=3 && st2<=3 && st3 <=3){
+        interaction.message.edit({content: "You won with Triple Cherries! :cherries: :cherries: :cherries:", components: []});
+        return bet * 2;
+    }
+    if(st1>3 &&st2>3 && st3>3 && st1<=6&&st2<=6 && st3<=6){
+        interaction.message.edit({content: ":partying_face: A Bells win??? NO WAY! :partying_face: ", components: []});
+        return bet * 3;
+    }
+    if(st1>=7 && st2>=7 && st3>=7 && st1<=8 && st2<=8 && st3<=8){
+        interaction.message.edit({content: ":scream::skull::tada:**TRIPLE RINGS!!!** :tada::skull: :scream:", components: []});
+        return bet * 4;
+    }
+    if(st1==9 && st2==9 && st3==9){
+        interaction.message.edit({content: ":skull: **¡¡MEGAWIN!!** :skull:", components: []});
+        return bet * 8;
+    }
+    else{
+        interaction.message.edit({content: "You won nothing. Try Again", components: []});
+        return 0;
+    }
 }
 
 //Loops through all the files in the command folder
@@ -136,9 +159,11 @@ client.on(Events.InteractionCreate, async interaction => {
             }
             if(interaction.customId == 'btnSpin'){
                 Spin();
-                console.log(slots[0],[0],[0]);
-                mongodb.updateUser(userID, slotsWin.checkSlotsWin(bet,interaction,slots[0],[1],[2]));
-                
+                let st1 =slots[Spin()[0]];
+                let st2 = slots[Spin()[1]];
+                let st3 = slots[Spin()[2]];
+                mongodb.updateUser(userID, checkSlotsWin(bet,interaction));
+                interaction.reply(st1 +" "+st2+" "+st3);
             }
         } else {
             interaction.followUp({content: "That's not your game, jackass!", ephemeral:true})
