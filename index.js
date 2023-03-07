@@ -19,7 +19,7 @@ const commandFiles = fs.readdirSync(commandsPath).filter(file=>file.endsWith('.j
 const btnBlackjack = require("./schemas/btnBlackjack.js");
 const btnSlots = require('./schemas/btnSlots.js');
 const slotsWin = require('./services/checkSlotsWin.js');
-const slots = [":cherries:",":cherries:", ":cherries:", ":cherries:", ":bell:",":bell:", ":bell:",":ring: ",":ring: ", ":seven:"]
+const slots = [":cherries:",":cherries:", ":cherries:", ":cherries:", ":bell:",":bell:", ":bell:",":ring:",":ring:", ":seven:"]
 var bet = 0;
 var user;
 var userID;
@@ -136,8 +136,7 @@ client.on(Events.InteractionCreate, async interaction => {
             }
             if(interaction.customId == 'btnSpin'){
                 Spin();
-                console.log(slots[Spin[0]],[Spin[1]]+[Spin[2]]);
-                interaction.reply(slots[Spin[0]],[Spin[1]]+[Spin[2]]);
+                console.log(slots[0],[0],[0]);
                 mongodb.updateUser(userID, slotsWin.checkSlotsWin(bet,interaction,slots[0],[1],[2]));
                 
             }
