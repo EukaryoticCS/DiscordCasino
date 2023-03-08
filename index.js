@@ -3,7 +3,7 @@ require('dotenv').config();
 const fs = require('node:fs');
 const path = require('node:path');
 var mongodb = require('./mongodb.js')
-const { Client, Events, GatewayIntentBits, Collection, ButtonInteraction, InteractionResponse } = require("discord.js");
+const { Client, Events, GatewayIntentBits, Collection } = require("discord.js");
 const deckofcards = require('./services/deckofcards.js');
 //Creating a new instance of our client
 const client = new Client({ intents: [GatewayIntentBits.Guilds] })
@@ -11,14 +11,10 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] })
 client.commands = new Collection();
 //goes into the commands folder to find commands
 const commandsPath = path.join(__dirname, 'commands');
-const embeded = require("./Embeded");
-const { isAsyncFunction } = require('node:util/types');
-const { isMainThread } = require('node:worker_threads');
 //Filters classes in the command folder. Looks to see if it ends with .js or not
 const commandFiles = fs.readdirSync(commandsPath).filter(file=>file.endsWith('.js'));
 const btnBlackjack = require("./schemas/btnBlackjack.js");
 const btnSlots = require('./schemas/btnSlots.js');
-const slotsWin = require('./services/checkSlotsWin.js');
 const slots = [":cherries:",":cherries:", ":cherries:", ":cherries:", ":bell:",":bell:", ":bell:",":ring:",":ring:", ":seven:"]
 var bet = 0;
 var user;
@@ -34,10 +30,10 @@ function Spin(){
     return [num1, num2, num3];
 }
 
-function checkSlotsWin(bet, interaction){
-    let st1 = Spin()[0];
-    let st2 = Spin()[1];
-    let st3 = Spin()[2];
+function checkSlotsWin(bet, interaction, slotPositions){
+    let st1 = slotPositions[0];
+    let st2 = slotPositions[1];
+    let st3 = slotPositions[2];
     if(st1 <=3 && st2<=3 && st3 <=3){
         interaction.message.edit({content: "You won with Triple Cherries! :cherries: :cherries: :cherries:", components: []});
         return bet * 2;
@@ -158,11 +154,11 @@ client.on(Events.InteractionCreate, async interaction => {
                 }
             }
             if(interaction.customId == 'btnSpin'){
-                Spin();
-                let st1 =slots[Spin()[0]];
-                let st2 = slots[Spin()[1]];
-                let st3 = slots[Spin()[2]];
-                mongodb.updateUser(userID, checkSlotsWin(bet,interaction));
+                let slotPositions = Spin();
+                let st1 = slots[slotPositions[0]];
+                let st2 = slots[slotPositions[1]];
+                let st3 = slots[slotPositions[2]];
+                mongodb.updateUser(userID, checkSlotsWin(bet,interaction, slotPositions));
                 interaction.reply(st1 +" "+st2+" "+st3);
             }
         } else {
@@ -195,11 +191,8 @@ client.on(Events.InteractionCreate, async interaction => {
                     bet = 30;
                     await command.execute(interaction, btnBlackjack.btnBlackjack);
                 }
-            } else {
-                await command.execute(interaction);
-            }
-            if(interaction.commandName == 'slots'){
-                console.log('slots is running')
+            } if(interaction.commandName == 'slots'){
+                console.log('slots is running');
                 if(user.availableFunds < 10) { //Do not do the command
                     interaction.reply({content: "You don't have enough money to play the slots! :rofl:", ephemeral:true});
                 } else{
