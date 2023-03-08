@@ -200,6 +200,8 @@ client.on(Events.InteractionCreate, async interaction => {
                     bet = 10;
                     await command.execute(interaction, btnSlots.btnSlots);
                 }
+            } else {
+                command.execute(interaction);
             }
         } catch (err) {
             console.error(err);
